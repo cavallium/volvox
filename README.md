@@ -1,3 +1,3 @@
-# Volvox Project
+# ![img](./.img/volvox-icon-small.svg) Volvox Project
 
-Work in progress
+_Work in progress_
