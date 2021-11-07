@@ -2,11 +2,9 @@ package it.cavallium;
 
 import io.smallrye.mutiny.Uni;
 import java.time.Duration;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @Path("/delay")
