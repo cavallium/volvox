@@ -150,3 +150,7 @@ modules.xml
 
 # End of https://www.gitignore.io/api/intellij+all
 /example/
+**/.cache/
+**/mvnw
+**/mvnw.cmd
+**/.mvn
