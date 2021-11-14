@@ -9,9 +9,10 @@ import it.tdlight.jni.TdApi.Error;
 import it.tdlight.jni.TdApi.Update;
 import java.time.Duration;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @Dependent
 public class TdNativeClient implements TdClient {
@@ -19,7 +20,7 @@ public class TdNativeClient implements TdClient {
     @Inject
     ReactiveTelegramClient client;
 
-    @Inject
+    @ConfigProperty(name = "td.requests.timeout")
     Duration requestTimeout;
 
     private Multi<Update> updates;
@@ -44,7 +45,8 @@ public class TdNativeClient implements TdClient {
         }).broadcast().toAllSubscribers();
     }
 
-    @Override public Multi<TdApi.Update> updates() {
+    @Override
+    public Multi<TdApi.Update> updates() {
         return updates;
     }
 
@@ -80,7 +82,9 @@ public class TdNativeClient implements TdClient {
                 });
     }
 
-    @Override public void dispose() {
+    @Override
+    @PreDestroy
+    public void dispose() {
         this.client.dispose();
     }
 }

@@ -9,8 +9,6 @@ import javax.ws.rs.core.MediaType;
 @Path("/api/td")
 public class TdResource {
 
-    @Inject TdSessionRegistry tdSessionRegistry;
-
     @Inject TdService tdService;
 
     @Path("/list")
@@ -18,8 +16,8 @@ public class TdResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String listSessions() {
         StringBuilder sb = new StringBuilder();
-        for (var session : tdSessionRegistry.getSessions()) {
-            sb.append(session).append(System.lineSeparator());
+        for (var session : tdService.getSessions()) {
+            sb.append(session.getKey()).append(System.lineSeparator());
         }
         return sb.toString();
     }
@@ -28,6 +26,6 @@ public class TdResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String createSession() {
-        return tdService.startSession(null);
+        return tdService.startSession();
     }
 }

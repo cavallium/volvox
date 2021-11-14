@@ -2,6 +2,7 @@ package io.volvox.td;
 
 import it.tdlight.jni.TdApi;
 
+@SuppressWarnings("CdiInjectionPointsInspection")
 public class TdObject {
 
     private final TdApi.Object object;

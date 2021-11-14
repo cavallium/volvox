@@ -96,6 +96,10 @@
       <groupId>it.tdlight</groupId>
       <artifactId>tdlight-natives-linux-amd64</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
