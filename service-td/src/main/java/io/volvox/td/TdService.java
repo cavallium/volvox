@@ -4,8 +4,6 @@ import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.vertx.ConsumeEvent;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import it.tdlight.tdnative.NativeClient;
-import it.tdlight.tdnative.NativeLog;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
@@ -29,7 +27,7 @@ public class TdService {
     Instance<TdEventBusClient> sessionInstances;
 
     @ConsumeEvent(value = "td.start-session")
-    private void onStartSession(Message<String> msg) {
+    public void onStartSession(Message<String> msg) {
         var sessionId = this.startSession();
         msg.reply(sessionId);
     }

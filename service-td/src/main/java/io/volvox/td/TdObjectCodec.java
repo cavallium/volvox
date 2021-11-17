@@ -5,10 +5,9 @@ import io.vertx.core.eventbus.MessageCodec;
 import it.tdlight.jni.TdApi;
 import it.tdlight.jni.TdApi.Deserializer;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Singleton;
 
 @ApplicationScoped
-public class TdObjectCodec implements MessageCodec<TdObject, TdObject> {
+public class TdObjectCodec implements MessageCodec<TdObjectCodec.TdObject, TdObjectCodec.TdObject> {
 
     @Override public void encodeToWire(Buffer buffer, TdObject t) {
         BufferUtils.encode(buffer, out -> t.getObject().serialize(out));
@@ -32,5 +31,19 @@ public class TdObjectCodec implements MessageCodec<TdObject, TdObject> {
     @Override public byte systemCodecID() {
         // Always "-1"
         return -1;
+    }
+
+    public static class TdObject {
+
+        private final TdApi.Object object;
+
+        public TdObject(TdApi.Object object) {
+            this.object = object;
+        }
+
+        public <T extends TdApi.Object> T getObject() {
+            //noinspection unchecked
+            return (T) object;
+        }
     }
 }

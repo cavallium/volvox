@@ -1,21 +1,14 @@
 package io.volvox.td;
 
-import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.specification.Argument;
-import java.util.List;
-import java.util.Set;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.core.IsNot;
-import org.hamcrest.text.IsEmptyString;
-import org.hamcrest.text.MatchesPattern;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.text.IsEmptyString.emptyOrNullString;
+
+import io.quarkus.test.junit.QuarkusTest;
+import java.util.Set;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 public class TdResourceTest {

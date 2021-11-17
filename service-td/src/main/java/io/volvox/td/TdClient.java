@@ -6,6 +6,7 @@ import it.tdlight.jni.TdApi;
 import it.tdlight.jni.TdApi.Update;
 
 public interface TdClient {
+
     Multi<Update> updates();
 
     <T extends TdApi.Object> Uni<T> send(TdApi.Function<T> function);

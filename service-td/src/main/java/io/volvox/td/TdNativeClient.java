@@ -1,6 +1,5 @@
 package io.volvox.td;
 
-import io.quarkus.runtime.StartupEvent;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import it.tdlight.common.ReactiveTelegramClient;
@@ -59,7 +58,7 @@ public class TdNativeClient implements TdClient {
                 .transformToUni(item -> {
                     if (item.getConstructor() == Error.CONSTRUCTOR) {
                         TdApi.Error error = (TdApi.Error) item;
-                        return Uni.createFrom().failure(new TdException(error.code, error.message));
+                        return Uni.createFrom().failure(new TelegramException(error.code, error.message));
                     } else {
                         return Uni.createFrom().item(item);
                     }
@@ -75,7 +74,7 @@ public class TdNativeClient implements TdClient {
                 .transformToUni(item -> {
                     if (item.getConstructor() == Error.CONSTRUCTOR) {
                         TdApi.Error error = (TdApi.Error) item;
-                        return Uni.createFrom().failure(new TdException(error.code, error.message));
+                        return Uni.createFrom().failure(new TelegramException(error.code, error.message));
                     } else {
                         return Uni.createFrom().item(item);
                     }
