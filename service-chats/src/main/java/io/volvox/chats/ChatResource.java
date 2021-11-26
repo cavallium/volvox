@@ -28,19 +28,19 @@ public class ChatResource {
 
     @GET
     public Multi<Chat> listSessions() {
-        return Chat.streamAll();
+        return chatRepository.streamAll();
     }
 
     @GET
     @Path("/{id}")
     public Uni<Chat> get(@PathParam("id") String id) {
-        return Chat.findById(id);
+        return chatRepository.findById(id);
     }
 
     @POST
     @Transactional
     public Uni<Response> create(Chat chat) {
-        return chat.persist()
+        return chatRepository.persist(chat)
                 // Return success
                 .replaceWith(() -> Response.created(URI.create("/api/" + chat.id)).build());
     }
@@ -50,11 +50,11 @@ public class ChatResource {
     @Transactional
     public Uni<Chat> update(@PathParam("id") String id, Chat chat) {
         // Find chat by id
-        return Chat.<Chat>findById(id)
+        return chatRepository.<Chat>findById(id)
                 .flatMap(entity -> {
                     if (entity == null) {
                         // Persist the chat if not found
-                        return chat.persist();
+                        return chatRepository.persist(chat);
                     } else {
                         // Update all fields
                         entity.name = chat.name;
@@ -68,7 +68,7 @@ public class ChatResource {
     @Path("/{id}")
     @Transactional
     public Uni<Void> delete(@PathParam("id") String id) {
-        return Chat.findById(id)
+        return chatRepository.findById(id)
                 .onItem().ifNull().failWith(NotFoundException::new)
                 .flatMap(PanacheEntityBase::delete);
     }
@@ -82,6 +82,6 @@ public class ChatResource {
     @GET
     @Path("/count")
     public Uni<Long> count() {
-        return Chat.count();
+        return chatRepository.count();
     }
 }
