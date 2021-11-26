@@ -17,7 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/api/chats")
+@Path("/chats")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ChatResource {
@@ -39,7 +39,7 @@ public class ChatResource {
     @POST
     public Uni<Response> create(Chat chat) {
         return Panache.withTransaction(() -> chatRepository.persist(chat))
-                .onItem().transform(inserted -> Response.created(URI.create("/api/" + chat.id)).build());
+                .onItem().transform(inserted -> Response.created(URI.create("/chats/" + chat.id)).build());
     }
 
     @PUT

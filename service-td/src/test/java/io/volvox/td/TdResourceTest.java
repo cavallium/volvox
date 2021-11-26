@@ -16,7 +16,7 @@ public class TdResourceTest {
     @Test
     public void testEmptyList() {
         given()
-                .when().get("/api/td/list")
+                .when().get("/td/list")
                 .then()
                 .statusCode(200)
                 .body(is(""));
@@ -25,7 +25,7 @@ public class TdResourceTest {
     @Test
     public void testCreateSession() {
         given()
-                .when().get("/api/td/create-session")
+                .when().get("/td/create-session")
                 .then()
                 .statusCode(200)
                 .body(not(emptyOrNullString()));
@@ -34,7 +34,7 @@ public class TdResourceTest {
     @Test
     public void testCreateMultipleSessions() {
         var sessionId1 = given()
-                .when().get("/api/td/create-session")
+                .when().get("/td/create-session")
                 .then()
                 .statusCode(200)
                 .body(not(emptyOrNullString()))
@@ -42,7 +42,7 @@ public class TdResourceTest {
                 .body()
                 .asString();
         var sessionId2 = given()
-                .when().get("/api/td/create-session")
+                .when().get("/td/create-session")
                 .then()
                 .statusCode(200)
                 .body(not(emptyOrNullString()))
@@ -53,7 +53,7 @@ public class TdResourceTest {
         var expectedBodyElems = Set.of(sessionId1, sessionId2);
 
         var bodyElems = Set.of(given()
-                .when().get("/api/td/list")
+                .when().get("/td/list")
                 .then()
                 .statusCode(200)
                 .extract()

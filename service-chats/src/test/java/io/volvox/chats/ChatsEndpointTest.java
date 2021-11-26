@@ -23,7 +23,7 @@ public class ChatsEndpointTest {
         //List all, should have all 3 usernames the database has initially:
         Response response = given()
                 .when()
-                .get("/api/chats")
+                .get("/chats")
                 .then()
                 .statusCode(200)
                 .contentType("application/json")
@@ -35,7 +35,7 @@ public class ChatsEndpointTest {
                 .when()
                 .body("{\"name\" : \"Telegram Official\"}")
                 .contentType("application/json")
-                .put("/api/chats/777000")
+                .put("/chats/777000")
                 .then()
                 .statusCode(200)
                 .body(
@@ -45,7 +45,7 @@ public class ChatsEndpointTest {
         //List all, Telegram Official should've replaced Telegram:
         response = given()
                 .when()
-                .get("/api/chats")
+                .get("/chats")
                 .then()
                 .statusCode(200)
                 .contentType("application/json")
@@ -56,13 +56,13 @@ public class ChatsEndpointTest {
         //Delete Telegram:
         given()
                 .when()
-                .delete("/api/chats/777000")
+                .delete("/chats/777000")
                 .then()
                 .statusCode(204);
 
         response = given()
                 .when()
-                .get("/api/chats")
+                .get("/chats")
                 .then()
                 .statusCode(200)
                 .contentType("application/json")
@@ -75,7 +75,7 @@ public class ChatsEndpointTest {
                 .when()
                 .body("{\"id\": \"777001-u\", \"name\" : \"Telegram2\"}")
                 .contentType("application/json")
-                .post("/api/chats")
+                .post("/chats")
                 .then()
                 .statusCode(201)
                 .body(emptyString());
@@ -83,7 +83,7 @@ public class ChatsEndpointTest {
         //List all, Pineapple should be still missing now:
         response = given()
                 .when()
-                .get("/api/chats")
+                .get("/chats")
                 .then()
                 .statusCode(200)
                 .extract().response();
@@ -95,7 +95,7 @@ public class ChatsEndpointTest {
     public void testEntityNotFoundForDelete() {
         given()
                 .when()
-                .delete("/api/chats/777123")
+                .delete("/chats/777123")
                 .then()
                 .statusCode(404)
                 .body(emptyString());
@@ -107,7 +107,7 @@ public class ChatsEndpointTest {
                 .when()
                 .body("{\"id\": \"777234-u\", \"name\" : \"Juan\"}")
                 .contentType("application/json")
-                .put("/api/chats/777234")
+                .put("/chats/777234")
                 .then()
                 .statusCode(200);
     }
@@ -118,7 +118,7 @@ public class ChatsEndpointTest {
                 .when()
                 .body("{\"name\" : \"Juan\"}")
                 .contentType("application/json")
-                .put("/api/chats/777234")
+                .put("/chats/777234")
                 .then()
                 .statusCode(500);
     }

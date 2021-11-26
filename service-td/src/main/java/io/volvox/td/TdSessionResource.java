@@ -14,7 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/api/td/session/{sessionId}")
+@Path("/td/session/{sessionId}")
 public class TdSessionResource {
 
     @PathParam("sessionId")
