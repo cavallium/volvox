@@ -14,7 +14,7 @@ import org.hibernate.annotations.NamedQuery;
         @NamedQuery(name = "Chat.updateStatusById", query = "update Chat p set p.status = :status where p.id = :id"),
         @NamedQuery(name = "Chat.deleteById", query = "delete from Chat p where p.id = ?1")
 })
-public class ChatRepository implements PanacheRepositoryBase<Chat, String> {
+public class ChatRepository implements PanacheRepositoryBase<Chat, Long> {
 
     public Uni<Chat> findByUsername(String username) {
         return find("#Chat.getByUsername", username).firstResult();

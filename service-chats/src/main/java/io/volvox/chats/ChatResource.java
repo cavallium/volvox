@@ -1,11 +1,10 @@
 package io.volvox.chats;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import io.quarkus.hibernate.reactive.panache.Panache;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import java.net.URI;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -33,24 +32,21 @@ public class ChatResource {
 
     @GET
     @Path("/{id}")
-    public Uni<Chat> get(@PathParam("id") String id) {
+    public Uni<Chat> get(@PathParam("id") Long id) {
         return chatRepository.findById(id);
     }
 
     @POST
-    @Transactional
     public Uni<Response> create(Chat chat) {
-        return chatRepository.persist(chat)
-                // Return success
-                .replaceWith(() -> Response.created(URI.create("/api/" + chat.id)).build());
+        return Panache.withTransaction(() -> chatRepository.persist(chat))
+                .onItem().transform(inserted -> Response.created(URI.create("/api/" + chat.id)).build());
     }
 
     @PUT
     @Path("/{id}")
-    @Transactional
-    public Uni<Chat> update(@PathParam("id") String id, Chat chat) {
+    public Uni<Chat> update(@PathParam("id") Long id, Chat chat) {
         // Find chat by id
-        return chatRepository.<Chat>findById(id)
+        return Panache.withTransaction(() -> chatRepository.findById(id)
                 .flatMap(entity -> {
                     if (entity == null) {
                         // Persist the chat if not found
@@ -61,16 +57,15 @@ public class ChatResource {
                         // Return the updated item
                         return Uni.createFrom().item(entity);
                     }
-                });
+                }));
     }
 
     @DELETE
     @Path("/{id}")
-    @Transactional
-    public Uni<Void> delete(@PathParam("id") String id) {
-        return chatRepository.findById(id)
+    public Uni<Void> delete(@PathParam("id") Long id) {
+        return Panache.withTransaction(() -> chatRepository.findById(id)
                 .onItem().ifNull().failWith(NotFoundException::new)
-                .flatMap(PanacheEntityBase::delete);
+                .flatMap(chatRepository::delete));
     }
 
     @GET

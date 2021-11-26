@@ -21,7 +21,7 @@ public class ChatsService {
     }
 
     @ConsumeEvent(value = "chats.get")
-    public void get(Message<String> msg) {
+    public void get(Message<Long> msg) {
         chatResource.get(msg.body()).subscribe().with(msg::reply);
     }
 

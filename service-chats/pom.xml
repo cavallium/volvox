@@ -16,8 +16,6 @@
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>2.4.1.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-    <volvox.tdlight.version>2.7.9.2</volvox.tdlight.version>
-    <volvox.tdlight.natives.version>4.0.183</volvox.tdlight.natives.version>
   </properties>
   <repositories>
     <repository>
@@ -87,18 +85,10 @@
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
-      <groupId>it.tdlight</groupId>
-      <artifactId>tdlight-java</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>it.tdlight</groupId>
-      <artifactId>tdlight-natives-linux-amd64</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>
