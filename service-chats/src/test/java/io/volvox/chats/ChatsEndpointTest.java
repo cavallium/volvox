@@ -2,21 +2,21 @@ package io.volvox.chats;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.is;
 
 import io.quarkus.hibernate.reactive.panache.Panache;
+import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
-import javax.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
+@QuarkusTestResource(ElasticsearchContainerTestResource.class)
 public class ChatsEndpointTest {
-
-    @Inject
-    ChatRepository chatRepository;
 
     @Test
     public void testListAllChats() {
@@ -123,8 +123,21 @@ public class ChatsEndpointTest {
                 .statusCode(500);
     }
 
+	@Test
+	public void testHealth() {
+		given()
+			.when()
+			.get("/q/health/ready")
+			.then()
+			.statusCode(200)
+			.contentType("application/json")
+			.body("status", is("UP"),
+				"checks.status", containsInAnyOrder("UP"),
+				"checks.name", containsInAnyOrder("Elasticsearch cluster health check"));
+	}
+
     @BeforeEach
     public void tearDown(){
-        Panache.withTransaction(() -> chatRepository.deleteById(777234L)).await().indefinitely();
+        Panache.withTransaction(() -> Chat.deleteById(777234L)).await().indefinitely();
     }
 }

@@ -1,14 +1,13 @@
 package io.volvox.chats;
 
-import io.quarkus.hibernate.reactive.panache.Panache;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import java.net.URI;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -18,65 +17,52 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/chats")
+@ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ChatResource {
 
-    @Inject
-    ChatRepository chatRepository;
+	@Inject
+	ChatService chatService;
 
     @GET
-    public Multi<Chat> listSessions() {
-        return chatRepository.streamAll();
+    public Multi<Chat> list() {
+        return chatService.listAll();
     }
 
     @GET
     @Path("/{id}")
     public Uni<Chat> get(@PathParam("id") Long id) {
-        return chatRepository.findById(id);
+        return chatService.get(id);
     }
 
     @POST
     public Uni<Response> create(Chat chat) {
-        return Panache.withTransaction(() -> chatRepository.persist(chat))
+        return chatService.create(chat)
                 .onItem().transform(inserted -> Response.created(URI.create("/chats/" + chat.id)).build());
     }
 
     @PUT
     @Path("/{id}")
     public Uni<Chat> update(@PathParam("id") Long id, Chat chat) {
-        // Find chat by id
-        return Panache.withTransaction(() -> chatRepository.findById(id)
-                .flatMap(entity -> {
-                    if (entity == null) {
-                        // Persist the chat if not found
-                        return chatRepository.persist(chat);
-                    } else {
-                        // Update all fields
-                        entity.name = chat.name;
-                        // Return the updated item
-                        return Uni.createFrom().item(entity);
-                    }
-                }));
+		return chatService.update(id, chat);
     }
 
     @DELETE
     @Path("/{id}")
     public Uni<Void> delete(@PathParam("id") Long id) {
-        return Panache.withTransaction(() -> chatRepository.findById(id)
-                .onItem().ifNull().failWith(NotFoundException::new)
-                .flatMap(chatRepository::delete));
+		return chatService.delete(id);
     }
 
     @GET
-    @Path("/search/{username}")
-    public Uni<Chat> search(@PathParam("username") String username) {
-        return chatRepository.findByUsername(username);
+    @Path("/by-username/{username}")
+    public Uni<Chat> resolveByUsername(@PathParam("username") String username) {
+		return chatService.resolveByUsername(username);
     }
 
     @GET
     @Path("/count")
     public Uni<Long> count() {
-        return chatRepository.count();
+        return chatService.count();
     }
 }

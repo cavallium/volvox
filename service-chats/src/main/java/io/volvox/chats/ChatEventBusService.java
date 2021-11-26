@@ -7,26 +7,26 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class ChatsService {
+public class ChatEventBusService {
 
     @Inject
     EventBus bus;
 
     @Inject
-    ChatResource chatResource;
+    ChatService chatService;
 
     @ConsumeEvent(value = "chats.list")
     public void listChats(Message<Void> msg) {
-        chatResource.listSessions().collect().asList().subscribe().with(msg::reply);
+		chatService.listAll().collect().asList().subscribe().with(msg::reply);
     }
 
     @ConsumeEvent(value = "chats.get")
     public void get(Message<Long> msg) {
-        chatResource.get(msg.body()).subscribe().with(msg::reply);
+		chatService.get(msg.body()).subscribe().with(msg::reply);
     }
 
     @ConsumeEvent(value = "chats.update")
     public void update(Message<Chat> msg) {
-        chatResource.update(msg.body().id, msg.body()).subscribe().with(msg::reply);
+		chatService.update(msg.body().id, msg.body()).subscribe().with(msg::reply);
     }
 }
