@@ -89,7 +89,15 @@ public class ChatService {
 						.replaceWith(chat);
 				} else {
 					// Update all fields
-					entity.name = chat.name;
+					if (chat.name != null) {
+						entity.name = chat.name;
+					}
+					if (chat.username != null) {
+						entity.username = chat.username;
+					}
+					if (chat.status != null) {
+						entity.status = chat.status;
+					}
 					// Return the updated item
 					return Uni.createFrom().item(entity);
 				}
