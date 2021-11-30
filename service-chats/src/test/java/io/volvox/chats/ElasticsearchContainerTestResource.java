@@ -1,11 +1,9 @@
 package io.volvox.chats;
 
+import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import java.util.Map;
-
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.utility.DockerImageName;
-
-import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 
 public class ElasticsearchContainerTestResource implements QuarkusTestResourceLifecycleManager {
 
@@ -17,8 +15,7 @@ public class ElasticsearchContainerTestResource implements QuarkusTestResourceLi
 	public Map<String, String> start() {
 		elasticsearchContainer.withEnv("action.auto_create_index", "true");
 		elasticsearchContainer.start();
-		return Map.of(
-			"quarkus.elasticsearch.hosts", elasticsearchContainer.getHttpHostAddress());
+		return Map.of("quarkus.elasticsearch.hosts", elasticsearchContainer.getHttpHostAddress());
 	}
 
 	@Override

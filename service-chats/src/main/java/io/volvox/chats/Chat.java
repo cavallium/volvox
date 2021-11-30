@@ -5,16 +5,22 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import io.smallrye.mutiny.Uni;
+import java.util.SortedSet;
 import java.util.StringJoiner;
+import java.util.TreeSet;
 import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import org.hibernate.annotations.SortNatural;
 
 @Entity
 @Cacheable
@@ -27,18 +33,44 @@ public class Chat extends PanacheEntityBase {
     @JsonSerialize(using = ChatIdJsonSerializer.class)
     @JsonDeserialize(using = ChatIdJsonDeserializer.class)
     public Long id;
+
+	/**
+	 * null = unknown username
+	 * "" = empty username
+	 */
     @Column(length = 128)
     public String name;
-    @Size(message = "Username length is not valid", min = 5)
+
+	// Field definition and bounds
+	@OneToMany(orphanRemoval = true, mappedBy = "chat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OrderBy("time DESC")
+	@SortNatural
+	// Field serialization
+	@JsonIgnore
+	public SortedSet<HistoricChatName> nameHistory = new TreeSet<>();
+
+	/**
+	 * null = unknown username
+	 * "" = empty username
+	 */
     @Column(length = 48)
-    @Size(message = "Username must not be an empty string", min = 1, max = 12 + 32)
-    @Pattern(message = "Username contains invalid characters", regexp = "^(?:[a-zA-Z\\d][_]?)+$")
-    @Pattern(message = "Username is not valid", regexp = "^(?:translation_|mv_)?[a-zA-Z]([a-zA-Z_\\d]){1,30}[a-zA-Z\\d]$")
+    @Pattern(message = "Username contains invalid characters", regexp = "^(?:|(?:[a-zA-Z\\d][_]?)+)$")
+    @Pattern(message = "Username is not valid", regexp = "^(?:|(?:translation_|mv_)?[a-zA-Z]([a-zA-Z_\\d]){1,30}[a-zA-Z\\d])$")
     public String username;
+
+	// Field definition and bounds
+	@OneToMany(orphanRemoval = true, mappedBy = "chat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OrderBy("time DESC")
+	@SortNatural
+	// Field serialization
+	@JsonIgnore
+	public SortedSet<HistoricChatUsername> usernameHistory = new TreeSet<>();
+
     @Enumerated
     public Status status;
 
-    @JsonIgnore
+
+	@JsonIgnore
     public ChatId getChatId() {
         return ChatId.fromLong(id);
     }
@@ -57,12 +89,12 @@ public class Chat extends PanacheEntityBase {
                 .toString();
     }
 
-    public static Uni<Chat> findUsername(String username) {
+	public static Uni<Chat> findUsername(String username) {
 		if (username == null) {
 			throw new NullPointerException("Username must not be null");
 		} else if (username.isBlank()) {
 			throw new NullPointerException("Username must not be blank");
 		}
-        return find("from Chat where username = ?1", username).firstResult();
-    }
+		return find("from Chat where username = ?1", username).firstResult();
+	}
 }
