@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.flush.FlushRequest;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -34,8 +35,12 @@ public class ChatsServiceWarmup {
 	}
 
 	private void createIndices() {
-		var req = new CreateIndexRequest("chats");
 		try {
+			var req = new DeleteIndexRequest("chats");
+			restHighLevelClient.indices().deleteAsyncAndAwait(req, RequestOptions.DEFAULT);
+		} catch (ElasticsearchStatusException ignored) {}
+		try {
+			var req = new CreateIndexRequest("chats");
 			restHighLevelClient.indices().createAsyncAndAwait(req, RequestOptions.DEFAULT);
 		} catch (ElasticsearchStatusException ex) {
 			if (ex.status() != RestStatus.BAD_REQUEST) {
