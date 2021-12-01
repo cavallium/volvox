@@ -11,6 +11,11 @@ services:
     networks:
       - database
       - elastic
+    depends_on:
+      - database
+      - es01
+      - es02
+      - es03
   td:
     build:
       context: ../service-td
