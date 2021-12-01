@@ -27,6 +27,7 @@ services:
   database:
     image: postgres
     container_name: postgres01
+    hostname: database
     env_file: database.env
     ports:
       - "5432:5432"
@@ -35,6 +36,7 @@ services:
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
     container_name: es01
+    hostname: searchengine
     environment:
       - node.name=es01
       - cluster.name=es-docker-cluster
