@@ -7,10 +7,9 @@ services:
     container_name: service-chats
     env_file: chats.env
     ports:
-      - 8282:8282
-    links:
-      - database
+      - "8282:8282"
     networks:
+      - database
       - elastic
   td:
     build:
@@ -19,14 +18,13 @@ services:
     container_name: service-td
     env_file: td.env
     ports:
-      - 8283:8283
-    links: []
+      - "8283:8283"
   database:
     image: postgres
     container_name: postgres01
     env_file: database.env
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - database_data:/var/lib/postgresql/data/
   es01:
@@ -46,7 +44,7 @@ services:
     volumes:
       - data01:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - "9200:9200"
     networks:
       - elastic
   es02:
@@ -96,4 +94,6 @@ volumes:
     driver: local
 networks:
   elastic:
+    driver: bridge
+  database:
     driver: bridge
