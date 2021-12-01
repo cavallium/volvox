@@ -72,7 +72,8 @@ public class TdEventBusClient implements TdClient {
     @ConsumeEvent(value = "td.send", codec = TdObjectCodec.class)
     public void onSendRequest(Message<TdObjectCodec.TdObject> msg) {
         this.send(msg.body().getObject()).subscribe().with(message -> msg.reply(message, SEND_OPTS), ex -> {
-            if (ex instanceof TelegramException tdException) {
+            if (ex instanceof TelegramException) {
+				TelegramException tdException = (TelegramException) ex;
                 msg.fail(tdException.getCode(), tdException.getMessage());
             } else {
                 msg.fail(500, ex.toString());

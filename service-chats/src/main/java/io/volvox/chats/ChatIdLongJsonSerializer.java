@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 
-public class ChatIdJsonSerializer extends JsonSerializer<ChatId> {
+public class ChatIdLongJsonSerializer extends JsonSerializer<Long> {
 
     @Override
-    public void serialize(ChatId value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(Long value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeString(ChatId.toString(value));
     }
 }

@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
-public class ChatIdJsonDeserializer extends JsonDeserializer<ChatId> {
+public class ChatIdLongJsonDeserializer extends JsonDeserializer<Long> {
 
     @Override
-    public ChatId deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Long deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         var id = p.readValueAs(String.class);
-        return ChatId.fromString(id);
+        return ChatId.stringToLong(id);
     }
 }

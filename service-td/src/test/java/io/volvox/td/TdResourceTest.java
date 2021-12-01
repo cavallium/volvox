@@ -1,17 +1,21 @@
 package io.volvox.td;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.text.IsEmptyString.emptyOrNullString;
 
 import io.quarkus.test.junit.QuarkusTest;
-import java.util.Set;
-import org.junit.jupiter.api.Assertions;
+import javax.inject.Inject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 public class TdResourceTest {
+
+	@Inject TdService tdService;
 
     @Test
     public void testEmptyList() {
@@ -50,18 +54,22 @@ public class TdResourceTest {
                 .body()
                 .asString();
 
-        var expectedBodyElems = Set.of(sessionId1, sessionId2);
+		var bodyElems = given()
+			.when().get("/td/list")
+			.then()
+			.statusCode(200)
+			.extract()
+			.body()
+			.asString()
+			.split("\n");
 
-        var bodyElems = Set.of(given()
-                .when().get("/td/list")
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .asString()
-                .split("\n"));
-
-        Assertions.assertEquals(expectedBodyElems, bodyElems);
+		assertThat(bodyElems).containsExactlyInAnyOrder(sessionId1, sessionId2);
     }
+
+	@BeforeEach
+	@AfterEach
+	public void resetTdServices() {
+		tdService.disposeAll();
+	}
 
 }

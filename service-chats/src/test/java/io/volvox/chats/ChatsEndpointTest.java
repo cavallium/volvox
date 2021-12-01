@@ -41,7 +41,7 @@ public class ChatsEndpointTest {
 			.when()
 			.body("{\"name\" : \"Telegram Official\"}")
 			.contentType("application/json")
-			.put("/chats/777000")
+			.put("/chats/777000-u")
 			.then()
 			.statusCode(200)
 			.body(
@@ -62,7 +62,7 @@ public class ChatsEndpointTest {
 		//Delete Telegram:
 		given()
 			.when()
-			.delete("/chats/777000")
+			.delete("/chats/777000-u")
 			.then()
 			.statusCode(204);
 
@@ -101,7 +101,7 @@ public class ChatsEndpointTest {
 	public void testEntityNotFoundForDelete() {
 		given()
 			.when()
-			.delete("/chats/777123")
+			.delete("/chats/777123-u")
 			.then()
 			.statusCode(404)
 			.body(emptyString());
@@ -113,7 +113,7 @@ public class ChatsEndpointTest {
 			.when()
 			.body("{\"id\": \"777234-u\", \"name\" : \"Juan\"}")
 			.contentType("application/json")
-			.put("/chats/777234")
+			.put("/chats/777234-u")
 			.then()
 			.statusCode(200);
 	}
@@ -124,7 +124,7 @@ public class ChatsEndpointTest {
 			.when()
 			.body("{\"name\" : \"Juan\"}")
 			.contentType("application/json")
-			.put("/chats/777234")
+			.put("/chats/777234-u")
 			.then()
 			.statusCode(500);
 	}

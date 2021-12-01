@@ -1,3 +1,5 @@
+TRUNCATE chat, chat_name, chat_username CASCADE;
+
 INSERT INTO chat(id, status, name, username) VALUES (9007199256673076, 1, 'My Supergroup', 'mysupergroup');
 INSERT INTO chat_name(chat_id, id, time, name) VALUES (9007199256673076, 12345000, current_timestamp, 'My Supergroup');
 INSERT INTO chat_username(chat_id, id, time, username) VALUES (9007199256673076, 12345001, current_timestamp, 'mysupergroup');

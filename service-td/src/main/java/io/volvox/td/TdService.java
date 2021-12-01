@@ -46,8 +46,13 @@ public class TdService {
     }
 
     void shutdown(@Observes ShutdownEvent event) {
-        clients.forEach((uuid, client) -> client.dispose());
+        disposeAll();
     }
+
+	public void disposeAll() {
+		clients.forEach((uuid, client) -> client.dispose());
+		clients.clear();
+	}
 
     public Optional<TdClient> get(String uuid) {
         if (uuid == null) return Optional.empty();

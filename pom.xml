@@ -33,6 +33,7 @@
       <id>complete</id>
       <modules>
         <module>service-td</module>
+				<module>service-chats</module>
       </modules>
     </profile>
   </profiles>

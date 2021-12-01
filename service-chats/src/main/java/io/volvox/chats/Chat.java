@@ -30,8 +30,8 @@ public class Chat extends PanacheEntityBase {
     @Positive(message = "id is not positive")
     @Max(message = "id is too big", value = ChatId.MASK)
     @Column(nullable = false, unique = true)
-    @JsonSerialize(using = ChatIdJsonSerializer.class)
-    @JsonDeserialize(using = ChatIdJsonDeserializer.class)
+	@JsonSerialize(using = ChatIdLongJsonSerializer.class)
+	@JsonDeserialize(using = ChatIdLongJsonDeserializer.class)
     public Long id;
 
 	/**

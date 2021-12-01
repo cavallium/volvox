@@ -1,5 +1,8 @@
 package io.volvox.chats;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import java.net.URI;
@@ -20,6 +23,8 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@JsonSerialize(using = ChatIdLongJsonSerializer.class, as = ChatId.class, typing = Typing.STATIC)
+@JsonDeserialize(using = ChatIdLongJsonDeserializer.class, as = ChatId.class)
 public class ChatResource {
 
 	@Inject
@@ -32,8 +37,8 @@ public class ChatResource {
 
     @GET
     @Path("/{id}")
-    public Uni<Chat> get(@PathParam("id") Long id) {
-        return chatService.get(id);
+    public Uni<Chat> get(@PathParam("id") ChatId id) {
+        return chatService.get(id.toLong());
     }
 
     @POST
@@ -44,14 +49,14 @@ public class ChatResource {
 
     @PUT
     @Path("/{id}")
-    public Uni<Chat> update(@PathParam("id") Long id, Chat chat) {
-		return chatService.update(id, chat);
+    public Uni<Chat> update(@PathParam("id") ChatId id, Chat chat) {
+		return chatService.update(id.toLong(), chat);
     }
 
     @DELETE
     @Path("/{id}")
-    public Uni<Void> delete(@PathParam("id") Long id) {
-		return chatService.delete(id);
+    public Uni<Void> delete(@PathParam("id") ChatId id) {
+		return chatService.delete(id.toLong());
     }
 
     @GET
