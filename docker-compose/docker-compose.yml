@@ -32,6 +32,10 @@ services:
       - "5432:5432"
     volumes:
       - database_data:/var/lib/postgresql/data/
+    networks:
+      database:
+        aliases:
+          - database
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
     container_name: es01
@@ -51,7 +55,9 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - elastic
+      elastic:
+        aliases:
+          - searchengine
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
     container_name: es02
